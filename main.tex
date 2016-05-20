@@ -1,0 +1,79 @@
+\documentclass[a4,11pt]{article}
+
+\parindent=10pt
+\parskip=6pt
+\usepackage[paper=a4paper, left=2cm, right=2cm, bottom=2.5cm,top=2.5cm]{geometry}
+
+% Paquetes de nacionalización. No olvidar para poder poner tildes!
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{listingsutf8}
+
+% Paquetes para pseudo
+\usepackage{listings} % este es para codigo posta
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+
+% Caratula (Recordar logo_uba.jpg y logo_dc.jpg)
+\usepackage{caratula}
+
+% Bibliografia
+% \usepackage{biblatex}
+% \addbibresource{biblio.bib}
+
+% Color de links
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\begin{document}
+
+
+\materia{Seguridad de la Información}
+\submateria{Primer Cuatrimestre 2016}
+\titulo{Investigación en seguridad en procesos electorales}
+\subtitulo{Pre entrega}
+\integrante{Brian Litwak}{}{}
+\integrante{Gino Scarpino}{}{}
+\integrante{Vilariño}{}{}
+\integrante{Valeria Tiffenberg}{193/10}{valetiff@gmail.com}
+
+
+\maketitle
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\section{Introducción}
+
+En este trabajo se quiere presentar un panorama de la evolución de los sistemas electorales informáticos, tomando los ejemplos de varios países y haciendo hincapié en sus aciertos y errores de seguridad.
+
+Dentro de los sistemas electrónicos de votación, reconocemos dos categorías: el voto electrónico presencial, ejemplificado por el que se dio en las últimas elecciones en la Ciudad de Buenos Aires, y el voto por internet, como lo ha tenido Suiza desde fines de la década del 90\footnote{Jan Gerlach and Urs Gasser,"Three Case Studies from Switzerland: E-Voting"}.
+
+La historia de los sistemas elctrónicos de votación empieza mucho antes que en la Argentina. Sin ir más lejos, Brasil tiene su sistema en funcionamiento desde el año 96\footnote{Corte Suprema de Brasil, http://english.tse.jus.br/electronic-voting/the-electronic-ballot-box-history}. Otros países con sistemas activos son India, Perú, Colombia, Estados Unidos, Francia y Japón, y ha habido algunos países donde se usó por varios años y decidió discontinuarse, y otros donde se han hecho pilotos que finalizaron en la decisión de no aplicar el sistema\footnote{National Democratic Institute, https://www.ndi.org/e-voting-guide/electronic-voting-and-counting-around-the-world}.
+
+En este informe todos estos casos resultan de interés, con foco particular en el uso argentino. En el desarrollo del informe se irán mencionando otras experiencias para completar el panorama global relacionado con el voto electrónico.
+
+\section{Temas a desarrollar}
+
+Intentaremos hacer hincapié en los problemas posibles dentro de la seguridad informática: confidencialidad, integridad y disponibilidad, dentro de las siguientes secciones:
+
+Estándares de almacenamiento de votos (Puede afectar disponibilidad e integridad)
+Seguridad física de las maquinas de votación (integridad)
+Transmisión de votos para su posterior escrutinio (afecta confidencialidad e integridad)
+Privacidad del voto (afecta confidencialidad e integridad)
+Auditabilidad del sistema  (afecta disponibilidad y confidencialidad)
+Comprobantes
+
+% \section{Bibliografía}
+
+% \printbibliography
+
+
+\end{document}
