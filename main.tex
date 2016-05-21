@@ -35,12 +35,12 @@
 
 \materia{Seguridad de la Información}
 \submateria{Primer Cuatrimestre 2016}
-\titulo{Investigación en seguridad en procesos electorales}
+\titulo{Investigación en seguridad en procesos\\ electorales}
 \subtitulo{Pre entrega}
-\integrante{Brian Litwak}{}{}
-\integrante{Gino Scarpino}{}{}
-\integrante{Vilariño}{}{}
-\integrante{Valeria Tiffenberg}{193/10}{valetiff@gmail.com}
+\integrante{Brian Litwak}{}{brian.litwak@gmail.com}
+\integrante{Gino Scarpino}{}{gino.scarpino@gmail.com}
+\integrante{Silvio Vileriño}{}{svilerino@gmail.com}
+\integrante{Valeria Tiffenberg}{}{valetiff@gmail.com}
 
 
 \maketitle
@@ -54,15 +54,15 @@
 
 En este trabajo se quiere presentar un panorama de la evolución de los sistemas electorales informáticos, tomando los ejemplos de varios países y haciendo hincapié en sus aciertos y errores de seguridad.
 
-Dentro de los sistemas electrónicos de votación, reconocemos dos categorías: el voto electrónico presencial, ejemplificado por el que se dio en las últimas elecciones en la Ciudad de Buenos Aires, y el voto por internet, como lo ha tenido Suiza desde fines de la década del 90\footnote{Jan Gerlach and Urs Gasser,"Three Case Studies from Switzerland: E-Voting"}.
+Dentro de los sistemas electrónicos de votación, reconocemos dos categorías: el voto electrónico presencial, ejemplificado por el que se dio en las últimas elecciones en la Ciudad de Buenos Aires, y el voto por internet, como lo ha tenido Suiza desde fines de la década del 90\footnote{Jan Gerlach and Urs Gasser,\textit{Three Case Studies from Switzerland: E-Voting}, \url{http://cyber.law.harvard.edu/sites/cyber.law.harvard.edu/files/Gerlach-Gasser_SwissCases_Evoting.pdf}}.
 
-La historia de los sistemas elctrónicos de votación empieza mucho antes que en la Argentina. Sin ir más lejos, Brasil tiene su sistema en funcionamiento desde el año 96\footnote{Corte Suprema de Brasil, http://english.tse.jus.br/electronic-voting/the-electronic-ballot-box-history}. Otros países con sistemas activos son India, Perú, Colombia, Estados Unidos, Francia y Japón, y ha habido algunos países donde se usó por varios años y decidió discontinuarse, y otros donde se han hecho pilotos que finalizaron en la decisión de no aplicar el sistema\footnote{National Democratic Institute, https://www.ndi.org/e-voting-guide/electronic-voting-and-counting-around-the-world}.
+La historia de los sistemas elctrónicos de votación empieza mucho antes que en la Argentina. Sin ir más lejos, Brasil tiene su sistema en funcionamiento desde el año 96\footnote{Corte Electoral Superior de Brasil, \url{http://english.tse.jus.br/electronic-voting/the-electronic-ballot-box-history}}. Otros países con sistemas activos son India, Perú, Colombia, Estados Unidos, Francia y Japón, y ha habido algunos países donde se usó por varios años y decidió discontinuarse, y otros donde se han hecho pilotos que finalizaron en la decisión de no aplicar el sistema\footnote{National Democratic Institute, \url{https://www.ndi.org/e-voting-guide/electronic-voting-and-counting-around-the-world}}.
 
 En este informe todos estos casos resultan de interés, con foco particular en el uso argentino. En el desarrollo del informe se irán mencionando otras experiencias para completar el panorama global relacionado con el voto electrónico.
 
 \section{Temas a desarrollar}
 
-Intentaremos hacer hincapié separadamente en los problemas posibles dentro de la seguridad informática: confidencialidad, integridad y disponibilidad, para tratar de abarcar toda ls superficie de vulnerabilidades. Para ordenar el trabajo, se van a usar los grupos sugeridos en el enunciado:
+Intentaremos hacer hincapié separadamente en los problemas posibles dentro de la seguridad informática: confidencialidad, integridad y disponibilidad, para tratar de abarcar toda la superficie de vulnerabilidades. Para ordenar el trabajo, se van a usar los grupos sugeridos en el enunciado:
 
 \begin{itemize}
 \item Estándares de almacenamiento de votos (Puede afectar disponibilidad e integridad)
@@ -86,6 +86,114 @@ Por último, la disponibilidad tiene varios factores: por un lado es importante 
 En esta pre entrega no se va a desarrollar cada sección en detalle. La idea es poner una aproximación a las secciones que tendrá el trabajo final y puntear en cada una los temas a tratar junto con alguna de la bibliografía en la que basamos ese punteo.
 
 \subsection{Estándares de almacenamiento de votos}
+
+El almacenamiento de votos es importante a corto y largo plazo. Es necesario poder obtener un resultado correcto al momento de finalizar la elección, pero también deben estar disponibles los datos si se quisiera hacer un recuento en el futuro.
+
+\begin{itemize}
+\item Se estudiarán métodos para saber que el número no ha sido alterado al final de la elección
+\begin{itemize}
+\item Se recomienda el uso de firmas digitales para el mensaje de recuento de votos, con la firma verificada de la máquina de la autoridad pertinente\footnote{National Democratic Institute, \textit{THE IMPORTANT USES OF CRYPTOGRAPHY IN ELECTRONIC VOTING AND COUNTING}, \url{https://www.ndi.org/e-voting-guide/examples/cryptography-in-e-voting}}
+\item En particular en la auditoría extra oficial de CABA se encontró que el archivo que guarda los votos no está firmado, y podría teóricamente ser remplazado por otro\footnote{Francisco Amato, Iván A. Barrera Oro, Enrique Chaparro, Sergio Demian Lerner, Alfredo Ortega, Juliano Rizzo, Fernando Russ, Javier Smaldone, Nicolas Waisman, \textit{Vot.Ar: una mala elección}, \url{http://ivan.barreraoro.com.ar/vot-ar-una-mala-eleccion/}}.
+\end{itemize}
+\end{itemize}
+
+
+\subsection{Seguridad física de las maquinas de votación}
+Los accesos a la máquina proveen varias formas posibles de ataques: cuánto menos expongan
+ entradas para posibles atacantes más seguras serán. Por otro lado, se debe tener en cuenta la custodia de las máquinas. Quién tiene acceso y cuándo posterior al último chequeo oficial.
+
+\subsubsection{Hardware utilizado en C.A.B.A}
+  Las máquinas utilizadas en la votación proveían acceso a distintos tipos de puertos. Primero, la lectora DVD que se podría usar para reemplazar el software oficial de la máquina introduciendo otro DVD. Se podía introducir un pendrive para copiar un nuevo software que alterara el comportamiento esperado del software oficial, o del hardware de la máquina. Se podría registrar todos los votos, entre otras cosas. Además, se podría añadir un dispositivo con antena para retrasmitir la información.
+
+  La solución planteada por Riguetti en su auditoría, es el control humano. Las máquinas están a la vista de las autoridades lo que dificultaría este tipo de ataques. Advierte por un control periódico sobre el hardware para verificar que se haya compromedito.
+
+\subsubsection{Hardware utilizado en el mundo}
+
+\begin{itemize}
+\item Empresas privadas que venden y alquilan maquinaria con software de votación (además de consultoría respecto del proceso completo)
+  \begin{itemize}
+  \item \url{http://www.smartmatic.com/voting/hardware/voting/}
+  \item \url{http://www.essvote.com/products-overview/}
+  \end{itemize}
+\item Identificación biométrica y comunicación con autoridades de mesa
+  \begin{itemize}
+  \item En Brasil se identifica al elector con datos biométricos, en particular lectores de huellas digitales. Además se usan ayudas lumínicas para la autoridad de mesa que le permiten saber si la máquina está lista para iniciar el proceso, si el votante ya hizo su voto o si hubo algún problema.\footnote{Corte Electoral Superior de Brasil, \url{http://english.tse.jus.br/electronic-voting/eletronic-ballot-box}}
+  \end{itemize}
+\end{itemize}
+
+\subsection{Transmisión de votos para su posterior escrutinio}
+
+La transmisión de votos para su posterior escrutinio también tiene su complejidad ya que la comunicación de estos es sensible a vulnerabilidades:
+\begin{itemize}
+\item Software o hardware malicioso que puede cambiar la intención del voto, agregar nuevos votos o eliminar votos
+\begin{itemize}
+\item Detalle del ataque multivoto en CABA\footnote{\url{https://docs.google.com/document/d/1aH6kvoLR8O1qWOpEz89FAB2xFcBNB-QqHgZpXxg0vGE/preview}}
+\end{itemize}
+\item Ataques de denegación de servicio por botnets causando que no se contabilicen votos
+\item El envío de boletas para el voto por internet puede pasar por muchos y diferentes servidores, logrando que el sistema no tenga la certeza de que la boleta recibida por el elector, es la boleta emitida para ser usada durante la votación. Además los emails pueden ser interceptados, leídos y modificados en el tránsito violando todos los requerimientos para realizar una votación
+\begin{itemize}
+\item En Estados Unidos los estándares de transimisión de votos son muy variables. Cada estado elije las máquinas y los métodos para usar y no se rigen por ningún mínimo de seguridad común. Hay un requerimiento estádistico de un error no mayor a 1 en 1 millón, que aparentemente no se cumple\footnote{Douglas W. Jones, \textit{Problems with Voting Systems and the Applicable Standards}, Testimony before the U.S. House of Representatives' Committee on Science, \url{http://homepage.cs.uiowa.edu/~jones/voting/congress.html}}.
+\end{itemize}
+\item Es posible que un empleado del gobierno encargado de información sensible tuviera interés en alterar los resultados por alguna vía. Mala praxis informática, de alguna forma.
+\begin{itemize}
+\item En CABA la empresa encargada de implementar el voto electronico  puso en manos de sus técnicos contratados la seguridad de la transmisión de datos del escrutinio provisorio. Además, lo hizo implementando un sistema de usuarios y contraseñas fácilmente deducible. Y para empeorar aún más la situación, una vez que alguien (un técnico o alguien que tuviera acceso a esta información) lograba hacerse de un certificado y una clave para la transmisión de datos, podía fácilmente descargar los de todos los centros de votación\footnote{Francisco Amato, Iván A. Barrera Oro, Enrique Chaparro, Sergio Demian Lerner, Alfredo Ortega, Juliano Rizzo, Fernando Russ, Javier Smaldone, Nicolas Waisman, \textit{El día que el sistema de voto electrónico Vot.Ar fue vulnerado}, \url{https://blog.smaldone.com.ar/2016/05/03/el-dia-que-el-sistema-de-voto-electronico-vot-ar-fue-vulnerado/}}.
+\end{itemize}
+\end{itemize}
+
+% Como este punto es muy sensible en el éxito de una elección, se puede ver las mejores prácticas que sugiere el National Institute Of Standards and Technology de EEUU \footnote{Security Best Practices for the Electronic Transmission of Election Materials for UOCAVA Voters,http://www.nist.gov/itl/vote/upload/nistir7711-Sept2011.pdf}.
+
+Notar que no siempre se transmiten los votos en el final de la elección \footnote{Smartmatic, empresa de máquinas para votación, \textit{Electronic voting in Venezuela: Transmission and Consolidation}, \url{https://www.youtube.com/watch?v=kq50jArNMqk}} ya que se puede votar a distancia mediante el voto por internet que se transmite en cualquier momento.
+
+
+\subsection{Privacidad del voto}
+
+Como se mencionó en la introducción, la privacidad del voto es fundamental legalmente al proceso electoral. El mayor riesgo es la unificación de un registro de voto con un registro de votante.
+
+\begin{itemize}
+\item Es necesario identificar cuáles son los métodos usados para separar a un votante de su voto, para saber qué tipo de vulnerabilidades podrían surgir
+\item Un medio virtual dice que las máquinas de Brasil tienen numerosas vulnerabilidades incluída una falla de confidencialidad mediante la cuál los presentes en el voto de un no vidente podrían saber qué está votando por el audio provisto por la máquina\footnote{HackRead 16/3/2016, \textit{Hackers can change election result using flaws in Electronic Voting Machines}, \url{https://www.hackread.com/electronic-voting-machines-hacking-flaw/}}, pero habría que encontrar fuentes más fidedignas que den detalles respecto de las vulnerabilidades.
+\item En la auditoría extra oficial de CABA se encontró que el chip de las boletas podía ser leído por un tercero\footnote{Francisco Amato, Iván A. Barrera Oro, Enrique Chaparro, Sergio Demian Lerner, Alfredo Ortega, Juliano Rizzo, Fernando Russ, Javier Smaldone, Nicolas Waisman, \textit{Vot.Ar: una mala elección}, \url{http://ivan.barreraoro.com.ar/vot-ar-una-mala-eleccion/}}, ya que no se encuentra encriptado.
+\end{itemize}
+
+\subsection{Auditabilidad del sistema}
+De igual forma que los sistemas de voto manual, los sistemas de voto electrónico tiene que poder ser auditados con el objetivo de confirmar el resultado de una elección.  Auditar tal sistema implica poder verificar los procesos utilizados para tanto emitir el voto como para el conteo final de votos.El sistema de auditoría tiene que ser capaz de detectar el fraude electoral y dar garantía de que todos los votos contados sean auténticos, es decir, que reflejen la intención del votante.
+
+Para realizar tal actividad, existen diferentes mecanismos los cuales tienen una división muy clara:
+\begin{enumerate}
+\item Los realizados por el elector
+\item Los realizados por profesionales
+\end{enumerate}
+Los primeros consisten en métodos como end-to-end (E2E) verifiable election system o Voter-verified paper audit trail (VVPAT).
+
+\subsubsection{Realizados por el elector}
+En E2E \footnote{Aggelos Kiayias, Thomas Zacharias y Bingsheng Zhang, \textit{End-to-End Verifiable Elections in the Standard Model}, Dept. of Informatics and Telecommunications, National and Kapodistrian University of Athens, Greece, \url{https://eprint.iacr.org/2015/346.pdf}} \footnote{Claudia Z. Acemyan, Philip Kortum, Michael D. Byrne, Dan S. Wallach, \textit{Usability of Voter Verifiable, End-to-end Voting Systems}, Department of Computer Science in Rice University, \url{https://www.usenix.org/system/files/conference/evtwote14/jets_0203-acemyan.pdf}}. Los votantes tienen la capacidad de verificar que su voto fue elegido adecuadamente, grabado y marcado en el resultado de las elecciones.
+
+La propiedad de seguridad que E2E tiene la intención de capturar es la capacidad de los votantes para detectar una autoridad electoral malicioso que intenta falsificar el resultado de la elección. Este método ha sido ampliamente aceptado como un requisito fundamental en los sistemas de voto electrónico. Más detalladamente, la forma que E2E logra tal verificación es que el votante obtiene un recibo al final del procedimiento de elección que se le permita verificar que su voto fue emitido como era la intención del votante, almacenado como fue emitido, y contado como fue almacenado.
+
+El VVPAT \footnote{Roy G. Saltman, \textit{Independent Verification: Essential Action to Assure Integrity in the Voting Process}, National Institute of Standards and Technology Gaithersburg, \url{http://www.votetrustusa.org/pdfs/saltman.pdf}} crea un registro en papel, verificado visualmente por el votante de cómo fue emitida su votación. Por ejemplo, este registro puede ser una boleta de papel que se deposita por el votante en una urna tradicional. Un VVPAT hace que el robo de los votos sea detectable por el elector en el instante. Además, estos registros pueden ser utilizados para un recuento en una fecha posterior.
+
+VVPAT solo puede ser utilizados en el voto electrónico presencial ya que emite un registro en papel para el elector, mientras que E2E puede ser utilizado tanto en el voto electrónico presencial como en el voto por internet.
+
+\subsubsection{Realizados por profesionales}
+La otra forma de realizar una auditoría es no involucrar al elector. Una forma es la divulgación del código o programa fuente y/o la documentación sobre el sistema de voto electrónico, de manera que representantes de los partidos políticos y organizaciones de la sociedad civil tengan la oportunidad de examinar su exactitud. Estas auditorías pueden ser realizadas antes de las elecciones, para evaluar el software, o incluso después, con los resultados en mano, para verificar el comportamiento de las máquinas e insumos asociados.
+\begin{itemize}
+\item Auditoría de elecciones 2015 en CABA realizada por FCEN\footnote{Claudio Enrique Righetti, \textit{Auditoría de sistemas elecciones 2015}, \url{https://www.eleccionesciudad.gob.ar/uploads/resoluciones/OAT-06252015201406.pdf}}.
+\item Auditoría de elecciones 2015 en CABA realizada por ITBA para la defensoría del pueblo de CABA\footnote{ITBA, \textit{Auditoría de Sistema de Votación Electrónica 2015 para la Defensoría del Pueblo de la CABA}, \url{http://defensoria.org.ar/wpnoticias/wp-content/uploads/2015/06/InformeAudotoriaVotoElectronico.pdf}}.
+\item Auditoría realizada sin autorización oficial de las máquinas usadas en Holanda y que logró falisificar el resultado. Este tipo de artículos funciona como llamado a cuidar la seguridad de las elecciones, más aún porque estas máquinas no dejan comprobantes en papel y todo el conteo se realiza en forma digital, obteniendo los números guardados en la memoria del aparato\footnote{Rop Gonggrijp, Willem-Jan Hengeveld, \textit{Nedap/Groenendaal ES3B voting computer, a security analysis}, \url{http://wijvertrouwenstemcomputersniet.nl/images/9/91/Es3b-en.pdf}}.
+\end{itemize}
+
+Con independencia del método de inspección que se elija, es fundamental que el sistema de voto electrónico tenga herramientas o medidas de auditoría para cada uno de las principales etapas del proceso electoral (la votación, el escrutinio).
+
+\subsection{Comprobantes}
+
+Por lo visto hasta ahora, una forma de recibir comprobantes en voto presencial es la utilizada por VVPAT\footnote{Animación de ejemplo de VVPAT, \url{https://web.archive.org/web/20070127111242/http://www.diebold.com:80/dieboldes/AccuVoteTSX.swf}}.
+
+El comprobante cumple más de una función:
+\begin{itemize}
+\item Le sirve al votante para corroborar que su voto fue para quién él quiso
+\item Sirve a la autoridad para saber que la votación se efectuó con éxito
+\item Sirve para un recuento manual de votos, tanto al terminar la elección como más adelante en el tiempo, si hiciera falta
+\end{itemize}
 
 % \section{Bibliografía}
 
