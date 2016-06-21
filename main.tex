@@ -121,24 +121,24 @@ Los accesos a la máquina proveen varias formas posibles de ataques: cuánto men
   \end{itemize}
 \end{itemize}
 
-\subsection{Transmisión de votos para su posterior escrutinio}
-
-La transmisión de votos para su posterior escrutinio también tiene su complejidad ya que la comunicación de estos es sensible a vulnerabilidades:
-\begin{itemize}
-\item Software o hardware malicioso que puede cambiar la intención del voto, agregar nuevos votos o eliminar votos
-\begin{itemize}
-\item Detalle del ataque multivoto en CABA\footnote{\url{https://docs.google.com/document/d/1aH6kvoLR8O1qWOpEz89FAB2xFcBNB-QqHgZpXxg0vGE/preview}}
-\end{itemize}
-\item Ataques de denegación de servicio por botnets causando que no se contabilicen votos
-\item El envío de boletas para el voto por internet puede pasar por muchos y diferentes servidores, logrando que el sistema no tenga la certeza de que la boleta recibida por el elector, es la boleta emitida para ser usada durante la votación. Además los emails pueden ser interceptados, leídos y modificados en el tránsito violando todos los requerimientos para realizar una votación
-\begin{itemize}
-\item En Estados Unidos los estándares de transimisión de votos son muy variables. Cada estado elije las máquinas y los métodos para usar y no se rigen por ningún mínimo de seguridad común. Hay un requerimiento estádistico de un error no mayor a 1 en 1 millón, que aparentemente no se cumple\footnote{Douglas W. Jones, \textit{Problems with Voting Systems and the Applicable Standards}, Testimony before the U.S. House of Representatives' Committee on Science, \url{http://homepage.cs.uiowa.edu/~jones/voting/congress.html}}.
-\end{itemize}
-\item Es posible que un empleado del gobierno encargado de información sensible tuviera interés en alterar los resultados por alguna vía. Mala praxis informática, de alguna forma.
-\begin{itemize}
-\item En CABA la empresa encargada de implementar el voto electronico  puso en manos de sus técnicos contratados la seguridad de la transmisión de datos del escrutinio provisorio. Además, lo hizo implementando un sistema de usuarios y contraseñas fácilmente deducible. Y para empeorar aún más la situación, una vez que alguien (un técnico o alguien que tuviera acceso a esta información) lograba hacerse de un certificado y una clave para la transmisión de datos, podía fácilmente descargar los de todos los centros de votación\footnote{Francisco Amato, Iván A. Barrera Oro, Enrique Chaparro, Sergio Demian Lerner, Alfredo Ortega, Juliano Rizzo, Fernando Russ, Javier Smaldone, Nicolas Waisman, \textit{El día que el sistema de voto electrónico Vot.Ar fue vulnerado}, \url{https://blog.smaldone.com.ar/2016/05/03/el-dia-que-el-sistema-de-voto-electronico-vot-ar-fue-vulnerado/}}.
-\end{itemize}
-\end{itemize}
+\subsection{Problemas en la transmisión de votos y consecuencias sobre su posterior escrutinio}
+\input{transmision}
+%La transmisión de votos para su posterior escrutinio también tiene su complejidad ya que la comunicación de estos es sensible a vulnerabilidades:
+%\begin{itemize}
+%\item Software o hardware malicioso que puede cambiar la intención del voto, agregar nuevos votos o eliminar votos
+%\begin{itemize}
+%\item Detalle del ataque multivoto en CABA\footnote{\url{https://docs.google.com/document/d/1aH6kvoLR8O1qWOpEz89FAB2xFcBNB-QqHgZpXxg0vGE/preview}}
+%\end{itemize}
+%\item Ataques de denegación de servicio por botnets causando que no se contabilicen votos
+%\item El envío de boletas para el voto por internet puede pasar por muchos y diferentes servidores, logrando que el sistema no tenga la certeza de que la boleta recibida por el elector, es la boleta emitida para ser usada durante la votación. Además los emails pueden ser interceptados, leídos y modificados en el tránsito violando todos los requerimientos para realizar una votación
+%\begin{itemize}
+%\item En Estados Unidos los estándares de transimisión de votos son muy variables. Cada estado elije las máquinas y los métodos para usar y no se rigen por ningún mínimo de seguridad común. Hay un requerimiento estádistico de un error no mayor a 1 en 1 millón, que aparentemente no se cumple\footnote{Douglas W. Jones, \textit{Problems with Voting Systems and the Applicable Standards}, Testimony before the U.S. House of Representatives' Committee on Science, \url{http://homepage.cs.uiowa.edu/~jones/voting/congress.html}}.
+%\end{itemize}
+%\item Es posible que un empleado del gobierno encargado de información sensible tuviera interés en alterar los resultados por alguna vía. Mala praxis informática, de alguna forma.
+%\begin{itemize}
+%\item En CABA la empresa encargada de implementar el voto electronico  puso en manos de sus técnicos contratados la seguridad de la transmisión de datos del escrutinio provisorio. Además, lo hizo implementando un sistema de usuarios y contraseñas fácilmente deducible. Y para empeorar aún más la situación, una vez que alguien (un técnico o alguien que tuviera acceso a esta información) lograba hacerse de un certificado y una clave para la transmisión de datos, podía fácilmente descargar los de todos los centros de votación\footnote{Francisco Amato, Iván A. Barrera Oro, Enrique Chaparro, Sergio Demian Lerner, Alfredo Ortega, Juliano Rizzo, Fernando Russ, Javier Smaldone, Nicolas Waisman, \textit{El día que el sistema de voto electrónico Vot.Ar fue vulnerado}, \url{https://blog.smaldone.com.ar/2016/05/03/el-dia-que-el-sistema-de-voto-electronico-vot-ar-fue-vulnerado/}}.
+%\end{itemize}
+%\end{itemize}
 
 % Como este punto es muy sensible en el éxito de una elección, se puede ver las mejores prácticas que sugiere el National Institute Of Standards and Technology de EEUU \footnote{Security Best Practices for the Electronic Transmission of Election Materials for UOCAVA Voters,http://www.nist.gov/itl/vote/upload/nistir7711-Sept2011.pdf}.
 
