@@ -1,4 +1,4 @@
-La transmisión de votos para su posterior escrutinio también tiene su complejidad ya que la comunicación de estos es sensible a vulnerabilidades y pueden ocurrir ataques como los enunciados a continuacion:
+La transmisión de votos para su posterior escrutinio también tiene su complejidad ya que la comunicación de estos es sensible a vulnerabilidades y pueden ocurrir ataques. A continuación haremos referencia al sistema de votacion electrónica Vot.Ar utilizado en Argentina en 2015.
 
 \subsubsection{Software o hardware malicioso que puede cambiar la intención del voto, agregar nuevos votos o eliminar votos}	
 Detalle del ataque multivoto en CABA\footnote{\url{https://docs.google.com/document/d/1aH6kvoLR8O1qWOpEz89FAB2xFcBNB-QqHgZpXxg0vGE/preview}}.\\
@@ -67,16 +67,58 @@ A continuación se mencionan posibles soluciones a este problema:
 El mecanismo de transmisión de datos utilizado en el sistema Vot.Ar consiste básicamente en una conexión entre cada terminal de votación y un servidor central que recibe los votos a medida que van siendo leídos las boletas con RFID. \\
 
 Si alguien con acceso a la red de alguna máquina de votacion quisiera atacar la disponibilidad del servidor para, por ejemplo, retrasar los resultados, podría simplemente obtener la IP o nombre del servidor central y mediante alguna red de botnets obtenida por otro medio, realizar ataques de denegación de servicio y posiblemente explotar vulnerabilidades en el servidor. Por ejemplo podría realizarse un \texttt{SYN-Flood attack}, alterando la disponibilidad del servidor.
-	
-\subsubsection{El envío de boletas para el voto por internet puede pasar por muchos y diferentes servidores, logrando que el sistema no tenga la certeza de que la boleta recibida por el elector, es la boleta emitida para ser usada durante la votación. Además los emails pueden ser interceptados, leídos y modificados en el tránsito violando todos los requerimientos para realizar una votación}
 
-	\begin{itemize}
-		\item En Estados Unidos los estándares de transimisión de votos son muy variables. Cada estado elije las máquinas y los métodos para usar y no se rigen por ningún mínimo de seguridad común. Hay un requerimiento estádistico de un error no mayor a 1 en 1 millón, que aparentemente no se cumple\footnote{Douglas W. Jones, \textit{Problems with Voting Systems and the Applicable Standards}, Testimony before the U.S. House of Representatives' Committee on Science, \url{http://homepage.cs.uiowa.edu/~jones/voting/congress.html}}.
-	\end{itemize}
 
-\subsubsection{Es posible que un empleado del gobierno encargado de información sensible tuviera interés en alterar los resultados por alguna vía. Mala praxis informática, de alguna forma}
-	
-	\begin{itemize}
-		\item En CABA la empresa encargada de implementar el voto electronico  puso en manos de sus técnicos contratados la seguridad de la transmisión de datos del escrutinio provisorio. Además, lo hizo implementando un sistema de usuarios y contraseñas fácilmente deducible. Y para empeorar aún más la situación, una vez que alguien (un técnico o alguien que tuviera acceso a esta información) lograba hacerse de un certificado y una clave para la transmisión de datos, podía fácilmente descargar los de todos los centros de votación\footnote{Francisco Amato, Iván A. Barrera Oro, Enrique Chaparro, Sergio Demian Lerner, Alfredo Ortega, Juliano Rizzo, Fernando Russ, Javier Smaldone, Nicolas Waisman, \textit{El día que el sistema de voto electrónico Vot.Ar fue vulnerado}, \url{https://blog.smaldone.com.ar/2016/05/03/el-dia-que-el-sistema-de-voto-electronico-vot-ar-fue-vulnerado/}}.
-	\end{itemize}
+\subsubsection{Transmisión de datos y mecanismos de seguridad}
+\footnote{\url{http://ivan.barreraoro.com.ar/vot-ar-una-mala-eleccion/}}
+\footnote{\url{https://blog.smaldone.com.ar/2016/05/03/el-dia-que-el-sistema-de-voto-electronico-vot-ar-fue-vulnerado/}}
+Los mecanismos de transmisión y seguridad propuestos para el sistema Vot.Ar son como siguen:
+\begin{itemize}
+	\item La terminal de votación es conectada a internet y un técnico de la empresa encargada inicia un software especial de transmisión en ellas. Esta conexión a internet puede variar, desde una conexión cableada del colegio hasta una conexión 3G/4G.
+	\item Este software de transmisión se conecta a un servidor de MSA y luego de realizar el recuento físico de boletas apoyando el RFID en la máquina, estos datos se envian al servidor.
+\end{itemize}
 
+¿Que puede fallar?. Comencemos hablando de lo mas obvio, la seguridad de la transmisión en si misma.\\
+La propuesta de la empresa es la utilización de certificados SSL. Cada terminal cuenta con su propio certificado X509 y su clave privada. Esto permite la autenticación de la terminal frente al servidor y es tambien utilizado para verificar la integridad de los datos.\\
+
+Claramente es vital que la distribución e instalación de estos certificados en las terminales sea un proceso bien diseñado ya que la información que manejan es ultra-sensible. Cualquiera que tenga acceso de manera malintencionada a esta información podría hacerse pasar por una terminar y subir datos espurios al servidor.
+
+A continuación se listan algunos de los problemas encontrados en este mecanismo.
+
+\subsubsection{Exceso de confianza en los delegados de instalación de los certificados}
+
+Según las fuentes, los técnicos eran contratados sin ni siquiera una entrevista presencial. Dadas las vulnerabilidades enunciadas a continuación cualquiera de estos técnicos tenía acceso a información que podia comprometer la elección.
+
+\subsubsection{Elecciónes humanas defectuosas al momento de distribuir claves privadas}
+
+La distribución de las claves privadas fue encarada de una forma desprolija e insegura.\\
+
+Los certificados estaban accesibles mediante una aplicación web con URLs muy previsibles:\\
+
+\begin{itemize}
+	\item \texttt{https://caba.operaciones.com.ar/media/certificados/CABA\_(COMUNA)\_(NUMERO)-(NOMBRE).tar.gz}
+\end{itemize}
+
+El acceso a la página era mediante usuario y contraseña de cada tecnico, con lo cual, una vez descubierto este patrón, un solo técnico podia descargar todos los certificados.
+
+\subsubsection{Elecciónes humanas defectuosas al momento de asignar contraseñas}
+Para empeorar aún mas las cosas, los nombres de usuario y claves de cada técnico eran trivialmente predecibles, ya que consistian en lo siguiente:
+
+\begin{itemize}
+	\item Username: (apellido)+(nombre) en minúscula sin caracteres especiales
+	\item Password: (emailDelTecnico)
+\end{itemize}
+
+Esto estaba especificado en los mismos manuales de capacitación que \textbf{recibian todos los tecnicos}. Cualquiera con acceso a alguna planilla de los datos de los tecnicos(por ejemplo los contratadores de RRHH), podrían haber suplantado la identidad de alguno o varios de ellos para cometer ilícitos en su nombre.
+
+\subsubsection{Falta de limitación de poder a un individuo con acceso a los datos}
+
+Estos últimos temas mencionados tambien deben analizarse en el marco de la confianza que se deposita en una sola persona. Hubiera sido mejor que la responsabilidad hubiera sido compartida entre varias personas, o al menos, las personas responsables deberían ser controladas de algún modo.
+
+\subsubsection{Ataques realizados al sistema de certificados de Vot.Ar}
+Dadas las vulnerabilidades mencionadas anteriormente, la lista de certificados fue filtrada dias antes del comicio de 2015. Por otro lado se filtraron además los datos personales de los técnicos, haciendo suponer otras vulnerabilidades.
+
+\subsubsection{Votacíón por internet: Debilidades en la transmisión de datos}
+El envío de boletas para el voto por internet puede pasar por muchos y diferentes servidores, logrando que el sistema no tenga la certeza de que la boleta recibida por el elector, es la boleta emitida para ser usada durante la votación. Además los emails pueden ser interceptados, leídos y modificados en el tránsito violando todos los requerimientos para realizar una votación
+
+Por ejemplo, en Estados Unidos los estándares de transimisión de votos son muy variables. Cada estado elije las máquinas y los métodos para usar y no se rigen por ningún mínimo de seguridad común. Hay un requerimiento estádistico de un error no mayor a 1 en 1 millón, que aparentemente no se cumple\footnote{Douglas W. Jones, \textit{Problems with Voting Systems and the Applicable Standards}, Testimony before the U.S. House of Representatives' Committee on Science, \url{http://homepage.cs.uiowa.edu/~jones/voting/congress.html}}.
