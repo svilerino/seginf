@@ -1,0 +1,110 @@
+\documentclass[a4,11pt]{article}
+
+\parindent=10pt
+\parskip=6pt
+\usepackage[paper=a4paper, left=2cm, right=2cm, bottom=2.5cm,top=2.5cm]{geometry}
+
+% Paquetes de nacionalización. No olvidar para poder poner tildes!
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{listingsutf8}
+
+% Paquetes para pseudo
+\usepackage{listings} % este es para codigo posta
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+
+% Caratula (Recordar logo_uba.jpg y logo_dc.jpg)
+\usepackage{caratula}
+
+% Bibliografia
+% \usepackage{biblatex}
+% \addbibresource{biblio.bib}
+
+% Color de links
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\begin{document}
+
+
+\materia{Seguridad de la Información}
+\submateria{Primer Cuatrimestre 2016}
+\titulo{Investigación en seguridad en procesos\\ electorales}
+\subtitulo{TP final}
+\integrante{Brian Litwak}{}{brian.litwak@gmail.com}
+\integrante{Gino Scarpino}{}{gino.scarpino@gmail.com}
+\integrante{Silvio Vileriño}{}{svilerino@gmail.com}
+\integrante{Valeria Tiffenberg}{193/10}{valetiff@gmail.com}
+
+
+\maketitle
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\section{Introducción}
+
+En este trabajo se quiere presentar un panorama de la evolución de los sistemas electorales informáticos, tomando los ejemplos de varios países y haciendo hincapié en sus aciertos y errores de seguridad.
+
+Dentro de los sistemas electrónicos de votación, reconocemos dos categorías: el voto electrónico presencial, ejemplificado por el que se dio en las últimas elecciones en la Ciudad de Buenos Aires, y el voto por internet, como lo ha tenido Suiza desde fines de la década del 90\footnote{Jan Gerlach and Urs Gasser,\textit{Three Case Studies from Switzerland: E-Voting}, \url{http://cyber.law.harvard.edu/sites/cyber.law.harvard.edu/files/Gerlach-Gasser_SwissCases_Evoting.pdf}}.
+
+La historia de los sistemas elctrónicos de votación empieza mucho antes que en la Argentina. Sin ir más lejos, Brasil tiene su sistema en funcionamiento desde el año 96\footnote{Corte Electoral Superior de Brasil, \url{http://english.tse.jus.br/electronic-voting/the-electronic-ballot-box-history}}. Otros países con sistemas activos son India, Perú, Colombia, Estados Unidos, Francia y Japón, y ha habido algunos países donde se usó por varios años y decidió discontinuarse, y otros donde se han hecho pilotos que finalizaron en la decisión de no aplicar el sistema\footnote{National Democratic Institute, \url{https://www.ndi.org/e-voting-guide/electronic-voting-and-counting-around-the-world}}.
+
+En este informe todos estos casos resultan de interés, con foco particular en el uso argentino. En el desarrollo del informe se irán mencionando otras experiencias para completar el panorama global relacionado con el voto electrónico.
+
+\section{Temas a desarrollar}
+
+Intentaremos hacer hincapié separadamente en los problemas posibles dentro de la seguridad informática: confidencialidad, integridad y disponibilidad, para tratar de abarcar toda la superficie de vulnerabilidades. Para ordenar el trabajo, se van a usar los grupos sugeridos en el enunciado:
+
+\begin{itemize}
+\item Estándares de almacenamiento de votos (Puede afectar disponibilidad e integridad)
+\item Seguridad física de las maquinas de votación (integridad)
+\item Transmisión de votos para su posterior escrutinio (afecta confidencialidad e integridad)
+\item Privacidad del voto (afecta confidencialidad e integridad)
+\item Auditabilidad del sistema  (afecta disponibilidad y confidencialidad)
+\item Comprobantes
+\end{itemize}
+
+Los tres ángulos de la seguridad informática son fundamentales a la confianza en las elecciones electrónicas, y la confianza es, discutiblemente, el pilar sobre el que las elecciones democtráticas suceden. Así como en muchos países no es obligatorio ir a votar, son aquellos que sí confían en que el resultado generará alguna diferencia y tiene importancia, quiénes se acercan a las urnas, digitales o no.
+
+La confidencialidad está establecida por ley en aquellos países que hemos investigado: el voto es secreto para proteger a la persona de ataques o influencias, y que vote a quién realmente desea votar. Las interfaces electrónicas de votación deben garantizar que al momento de votar, nadie más que el votante sabe el voto, y al mismo tiempo, que el almacenamiento de los votos y de la lista de votantes no se pueden unir, a posteriori, para asociar un voto a una persona.
+
+La integridad es, en este contexto, lo más importante para la confianza. Es necesario que el voto que la persona emitió sea contado como tal, ni por otro votante, ni mútiples veces, ni ignorado. El dato como se emitió, debe llegar a destino.
+
+Por último, la disponibilidad tiene varios factores: por un lado es importante que hardware y software de votación estén en funcionamiento correcto al momento de realizarse las elecciones, para todos los votantes; y por otro, es necesario que los votos puedan ser contados para el recuento original, pero incluso que estén disponibles para nuevos recuentos si la justicia lo requiriera, por ejemplo.
+
+\pagebreak
+\section{Estándares de almacenamiento de votos}
+
+\pagebreak
+\section{Seguridad física de las maquinas de votación}
+
+\pagebreak
+\section{Problemas en la transmisión de votos y consecuencias sobre su posterior escrutinio}
+\input{transmision}
+
+\pagebreak
+\section{Privacidad del voto}
+
+\pagebreak
+\section{Auditabilidad del sistema}
+
+\pagebreak
+\section{Comprobantes}
+\input{comprobantes}
+
+
+% \section{Bibliografía}
+
+% \printbibliography
+
+
+\end{document}

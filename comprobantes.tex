@@ -1,0 +1,57 @@
+En inglés se habla de un “paper trail”, literalmente “rastro de papel”, cuando una operación realizada tiene comprobantes en papel verifican que se realizó y cuál fue el resultado. En el acto de votación electrónica este rastro de papel es siempre un adicional a los registros guardados por las varias máquinas encargadas de realizar la elección y tiene la ventaja de ser entendible para cualquiera (sin necesidad de entrenamiento en informática), posiblemente duradero en el tiempo, y de funcionar como back up en caso de que algo fallara con el sistema electrónico.
+
+Hay dos momentos del proceso de votación donde el votante necesita algún tipo de comprobación de su acto: por un lado, al emitir el voto es necesario saber que el proceso fue exitoso y finalizó; y por el otro (y esto no sucede cuando se vota con boletas de papel) el votante puede querer comprobar que efectivamente su voto se contó, y se contó para el candidato elegido. Los sistemas de votación ‘End-to-end’ le permiten verificar ambas instancias.
+
+\subsection{Ejemplo de un End-to-end diseñado recientemente}
+
+\subsubsection{STAR vote}
+https://www.usenix.org/system/files/conference/evtwote13/jets-0101-bell.pdf
+Desarrollado en Texas para suplir las fallas de las máquinas DRE compradas 10 años antes, y frente a reticencia de las autoridades a volver a boletas con marcas manuales que ya les habían traído problemas de ambigüedad en el pasado.
+El sistema consiste en software diseñado para ser usado sobre hardware comercial, y para permitir que el votante pueda verificar su voto (además de algunos “constraints” más dados por la forma de las elecciones en Estados Unidos, como múltiples días de votación y grandes cantidades listas de candidatos).\\
+
+El diseño de este sistema incluye back ups en papel en todas las instancias: al llegar, el votante se registra con su documento y recibe un sticker duplicado con un código de barras. Una de las copias queda en un registro en papel con su firma, y la segunda se escanea en la máquina controladora de la red interna del centro de votación. Esa computadora le entrega un PIN de 5 dígitos, único a esa central, que el usuario ingresará en la máquina de votación propiamente dicha. Al terminar de votar recibirá un “ticket” con dos copias de su voto, una en texto plano con un número de secuencia identificatorio, y otra con un hash del voto encriptado y la fecha, hora e identificador del lugar de votación. El votante deposita la que tiene el voto en claro (luego de verificar que sea el correcto) en la urna, y se queda con el otro. Si el voto no es depositado allí, no es válido. Con el hash que se llevó en la segunda copia, el votante puede entrar en el sitio del condado y verificar que se haya contado como válido.\\
+
+El hash que se lleva el votante es de la siguiente forma: $z_i = H(E_K(v),m,z_i-1)$ con $H$ la función de hash, $E_k$ el algoritmo de encriptación, $m$ el identificador de la terminal de votación y $z_i - 1$ el hash anterior. De esta forma el hash no contiene la información del voto en forma directa. \\
+
+Estos hashes se conservan en la máquina con un timestamp del momento en que se realizó el voto, y las claves de encriptación se guardan fuera del sistema, combinando claves públicas de un número determinado de oficiales administrativos de la votación. \\
+
+Este sistema de votación tiene un rastro muy completo del proceso, pero notablemente, no funciona sólo como back up si no que agrega una medida de seguridad extra: no se cuenta ningún voto registrado electrónicamente si el número de serie equivalente no está en la urna física. Esto anula la posibilidad de modificar los votos guardados en la máquina de forma que se multipliquen o pensar en un ataque que borre los votos guardados ya que la urna se abre de todos modos y es la que tiene el dicho final sobre qué votos se cuentan.\\
+
+De haber alguna discrepancia de votos, es relativamente fácil aislarla a algún voto en particular. \\
+
+% [ Hay un paper que muestra que el sistema de verificación final del usuario no es muy robusto: Everett 2007. ]
+
+\subsubsection{Sistemas electrónicos sobre boleta de papel}
+https://people.csail.mit.edu/rivest/pubs/CCCEx09.pdf
+Otro tipo de sistema end-to-end en Estados Unidos, es Scantegrity o Prêt à Voter, que agregan una capa de inteligencia electrónica a un sistema de boletas anotadas a mano. \\
+El objetivo de Scantegrity era reemplazar los DRE en uso y mejorar las boletas en papel leídas y contadas en forma electrónica con el agregado de un rastro de papel. \\
+El sistema ofrece seguridad para el votante de que su elección fue contada proveyendo un comprobante de voto con un número de serie y un código identificatorio de su candidato. Los códigos son asignados en cada boleta impresa al azar y sólo son visibles cuando el votante marca en la boleta con un marcador especial que revela la “tinta invisible”. El votante luego copia ese código a un pedazo removible de la boleta. Una vez que el voto fue aceptado por las autoridades de mesa, éstos pasan un marcador con otra tinta especial por el sector removible para que quede visible el número de serie de la boleta, y el votante se lleva este comprobante. Al finalizar la elección éste puede chequear en el sitio del condado que el número de serie de su boleta esté asociado al código que anotó como el correspondiente a su candidato. Los resultados de la elección se calculan de forma reproducible a partir de los publicados en internet, pero la lectura de las boletas se sigue haciendo en forma automatizada con los lectores ya existentes.\\
+
+Los riesgos posibles con respecto a la generación de comprobantes son dos: que el comprobante contenga información respecto del voto, rompiendo la confidencialidad del acto y posibilitando la venta de votos; y la alteración del resultado final de la elección convenciendo al votante de que votó por quién quería cuando en realidad se generó otro voto.
+https://talmoran.net/papers/KRMC10-attackvote.pdf En este paper se describe una forma de reemplazar las boletas de Pret a Voter por unas falsas para que el código ingresado no sea el deseado, si no el de un candidato en particular. Este ataque no es técnicamente informático, si no que depende de los administrativos que entregan las boletas y la forma de “ticket” que elija el votante.\\
+
+
+
+\subsection{Problemas de usabilidad}
+
+Idealmente, es deseable implementar todo aquello que vuelva al sistema más seguro. Pero en la práctica hay otros factores que afectan sobre la decisión de agregar características nuevas al sistema de votación. En particular, hay un estudio ($https://www.usenix.org/system/files/conference/evtwote14/jets_0203-acemyan.pdf$ ) hecho sobre los sistemas mencionados que funcionan como agregado a las boletas de papel que, si bien ayudan estrictamente hablando de seguridad, son tan difícil de usar para los votantes que el porcentaje de votos exitosos puede ser tan bajo como el 58\%. Esto quiere decir que un porcentaje importante de los votantes no puede elegir a un candidato exitosamente porque no comprendió el uso correcto de alguna porción del sistema. Así mismo, registraron tiempos más largos de uso y niveles de frustración altos entre las personas testeadas. Y agregan que la cantidad de gente que efectivamente realiza la verificación posterior de su voto es muy baja.
+
+\subsection{Paper trails parciales}
+
+Fuera del contexto de los sistemas end-to-end hay otras opciones utilizadas. Hay sistemas que utilizan papel en forma parcial, por ejemplo, combinando una impresora con un DRE, que devuelve un comprobante del voto que le permite al votante verificar que fuera el candidato correcto. En ocasiones, ese comprobante puede ser metido en una urna y usado para contabilizar votos de haber problema con el sistema electrónico, pero no es siempre así.
+
+En el caso de que la impresión sea utilizada como backup al sistema electrónico guardándose para posterior verificación, el sistema se denomina VVPAT (Voter-verified paper audit trail), este es el tipo de sistema a implementarse en india (http://indianexpress.com/article/india/india-news-india/2019-general-elections-paper-trail-evms-cec/ ) y en uso en algunos estados de Estados Unidos (http://www.nbcnews.com/id/5937115/). Este tipo de sistemas no le permiten saber al votante si su voto se contó, pero dan un respaldo en caso de haber habido problemas con el resultado electrónico, incluyendo si fuera necesario hacer el recuento de nuevo.
+Se implementa de varias formas distintas: puede ser que el votante tenga que cortar el recibo y depositarlo en una urna, como en STAR, o puede ser que el votante nunca toque el recibo, pero si lo vea a través de un cristal para verificarlo, como se hace en Nevada, EEUU (http://www.votetrustusa.org/pdfs/saltman.pdf).
+
+El caso de la Ciudad de Buenos Aires es un VVPAT con ciertas limitaciones. Por un lado, sirve para verificar que el candidato seleccionado es el mismo que figura en la boleta, gracias a la impresión del voto en texto plano, pero como se expone en https://ivan.barreraoro.com.ar/wp-content/uploads/2015/09/Software-vulnerabilities-in-the-Brazilian-voting-machine.pdf no se utiliza el valor impreso en la boleta, si no el que está en el chip que lee la misma máquina para contar. De forma que las boletas en papel no están sirviendo como verificación a menos que haya un recuento específico.
+
+
+\subsection{Lugares sin paper trail}
+
+Las máquinas utilizadas en algunas partes de Estados Unidos (http://news.stanford.edu/pr/03/dill25.html ) y en todo Brasil son DRE, que como se viene viendo, no entrega ningún tipo de comprobante por sí sola (Brasil https://ivan.barreraoro.com.ar/wp-content/uploads/2015/09/Software-vulnerabilities-in-the-Brazilian-voting-machine.pdf ). El hecho de que no imprimen ni usan papel se comunica como ventaja a nivel de ahorro de recursos.
+
+En Nevada se vio como una deficiencia de seguridad no tener ningún backup al conteo electrónico, fue ese el estado del que se habló más arriba, y por eso implementó una combinación de DREs con impresoras para generar un VVPAT. Varios otros estados siguieron su ejemplo, como California uno de los estados con más representantes del país, y se está extendiendo por el territorio.
+
+\subsection{Objeciones al paper trail como se implementa habitualmente}
+
+Si bien la literatura parece estar en acuerdo sobre la necesidad de mantener un rastro de papel de las elecciones, hay discusiones existentes sobre la forma de implementarlo. Por un lado, hay algunos autores que remarcan que las máquinas tienen grandes beneficios de accesibilidad, pero que éstos son contrarrestados agregando un recibo de papel con un formato distinto al de la pantalla, en ocasiones muy largo. Todo esto podría dificultar la verificación por personas con limitaciones de lecto-escritura, quienes tuvieran problemas de movilidad o de visión. (http://www.votetrustusa.org/pdfs/saltman.pdf, sección 9)
