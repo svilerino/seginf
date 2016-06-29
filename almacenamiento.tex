@@ -32,9 +32,20 @@ En otro ejemplo de Estados Unidos, pero en Connecticut, hay máquinas ($https://
 
 \subsection{Almacenamiento externo}
 
-Otra forma de almacenar los votos, es la implementada en las elecciones del 2015 en Argentina y en las elecciones previas al 2010 en Israel, donde los votos se graban en un chip RFID que se encuentra en la boleta (En el caso de Argentina sería la BUE) y se deposita la boleta en una urna física. Luego, en el escrutinio de votos, se utiliza una máquina para leer la información de la boleta y poder contabilizar el voto. En la sección de privacidad, seguiremos mencionando estos países ya que los comentarios acerca de los posibles ataques tienen más que ver con la pérdida del anonimato que con el formato de almacenamiento en sí.
+Otra forma de almacenar los votos, es la implementada en las elecciones del 2015 en Argentina y en las elecciones previas al 2010 en Israel, donde los votos se graban en un chip RFID que se encuentra en la boleta (En el caso de Argentina sería la BUE) y se deposita la boleta en una urna física. Luego, en el escrutinio de votos, se utiliza una máquina para leer la información de la boleta y poder contabilizar el voto. 
 
-FALTARÍA HABLAR DE COMO SE PUEDE REESCRIBIR EL CHIP O QUE SACANDO LA BOLETA ANTES DE TIEMPO SE PUEDE PERDER EL VOTO
+Según la auditoría realizada por la ITBA para la Defensoría del Pueblo de la C.A.B.A
+\footnote{\url{http://www.defensoria.org.ar/wp-content/uploads/2015/06/InformeAudotoriaVotoElectronico.pdf}}
+, existen tres posibles problemas al retirar la BUE:
+\begin{itemize}
+	\item Si la máquina ha iniciado la grabación del chip RFID pero no la ha finalizado, el sistema ya no responde y se tiene la necesidad de reiniciar la máquina
+	\item Si la máquina ha finalizado la grabación del chip RFID, entonces queda una boleta con el voto registrado sólo en el chip RFID, sin el voto impreso en la boleta
+	\item Si la máquina ni siquiera ha iniciado la grabación del chip RFID, entonces al volver a ingresar para un nuevo voto, en la pantalla se muestra la selección del votante anterior en un recuadrado en verde
+\end{itemize}
+
+
+En la sección de privacidad, seguiremos mencionando estos países ya que los comentarios acerca de los posibles ataques tienen más que ver con la pérdida del anonimato que con el formato de almacenamiento en sí.
+
 
 
 
