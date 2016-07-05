@@ -46,8 +46,13 @@ Según la auditoría realizada por la ITBA para la Defensoría del Pueblo de la 
 
 En la sección de privacidad, seguiremos mencionando estos países ya que los comentarios acerca de los posibles ataques tienen más que ver con la pérdida del anonimato que con el formato de almacenamiento en sí.
 
-
-
+\subsection{Mal uso de esquemas de encriptación}
+Analizando el sistema de votación electrónica de Brasil, se observan dos problemas mencionados a continuación respecto a la encriptación utilizada en el sistema.
+\footnote{\url{https://ivan.barreraoro.com.ar/wp-content/uploads/2015/09/Software-vulnerabilities-in-the-Brazilian-voting-machine.pdf}}
+\begin{itemize}
+	\item \textbf{Algoritmos de encriptación obsoletos:} La función criptográfica SHA-1 utilizada para computar firmas digitales y chequeos de integridad no es resistente a colisiones. Un ataque aprovechando esta vulnerabilidad podría permitir a un atacante construir un software de votación malicioso capaz de producir resultados falsos indistinguibles de los resultados correctos.
+	\item \textbf{Uso inadecuado de encriptación: } La misma clave de encriptación es compartida por todas las terminales de votación. Esta clave es utilizada para encriptar sus tarjetas de memoria de almacenamiento. Para empeorar las cosas, la clave criptográfica tambien esta guardada en texto plano en las memorias de almacenamiento. Claramente esta es una vulnerabilidad a la confidencialidad de la información.
+\end{itemize}
 
 
 
