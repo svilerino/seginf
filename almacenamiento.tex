@@ -55,12 +55,16 @@ Analizando el sistema de votación electrónica de Brasil, se observan dos probl
 \end{itemize}
 
 
+\subsection{Falta de seguridad respecto a la configuración y mantenimiento del SO}
+En un informe publicado por VITA \footnote{(VIRGINIA INFORMATION TECHNOLOGIES AGENCY)} acerca del sistema de voto electrónico en Virginia, USA, se menciona que el sistema utilizado en las terminales de votación era un Windows XP Embedded 2002 sin los ultimos parches de seguridad, cosa que permitía explotar vulnerabilidades conocidas. Particularmente, se realizó un ataque al file-sharing system utilizando fuerza bruta para adivinar la password de acceso de Administrador, utilizando un simple diccionario concluyeron que la password era ``admin'', permitiendo acceso a los siguientes servicios de la terminal:
 
+\begin{itemize}
+	\item Remote Desktop Protocol: Podia accederse remotamente como administrador a la terminal de voto.
+	\item Los paths compartidos por defecto como ``\$C'', ``\$D'', ``ADMIN\$'', etc eran accesibles para la transferencia de datos.
+\end{itemize} 
 
-
-
-
-
+Junto a esto, cada terminal poseía una base de datos \texttt{Microsoft Access} conteniendo información sensible como ser la información de dicha terminal, la ubicación y el numero de votos. Dicha base estaba protegida por una password tan debil que fue crackeada en 10 segundos utilizando una herramienta para tales fines.
+Unificando estas debilidades mencionadas, sumadas a la pobre seguridad en la red Wifi de las terminales\footnote{Mas de esto en transmisión}, constituyen un espectacular ataque en el cual se puede reemplazar la base de datos de votación de la terminal manteniendose cerca y accediendo mediante red Wifi.\footnote{\url{https://www.schneier.com/blog/archives/2015/04/an_incredibly_i.html}}.
 
 %%% PASADO A SEG FISICA
 % El componente electrónico de votación en India, llamado EVM, está compuesto por dos partes: la unidad de votación (izquierda) y la unidad de control (derecha) que están enlazadas por un cable de 5 metros. Las unidades de votación están realizadas para soportar hasta 16 candidatos. En caso de ser más candidatos, se agrega otra unidad de votación y es posible agregar hasta 4 unidades de votación, dando una capacidad máxima de 64 posibles candidatos. En la unidad de votación, se agrega una hoja indicando que botón representa a cada candidato con el símbolo de su partido político. Para votar, el elector tiene que ser identificado por el presidente de mesa que luego le realiza una marca en el dedo con tinta indeleble para evitar que vuelva a votar y presiona un botón en la unidad de control, permitiendo al elector votar en la unidad de votación. Al realizar esto, se prende una luz en la unidad de votación indicando que el votante está listo para sufragar.
