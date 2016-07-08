@@ -3,7 +3,7 @@ La complejidad que rodea la transmisión de votos para su posterior escrutinio e
 Frente a la realidad de dos países investigados, India e Israel, que no transmiten los votos en línea, si no que trasladan las máquinas físicamente hasta un cierto lugar, y realizan el recuento de todos los votos desde ahí; se plantea un cierto inicial grado de desconfianza frente al medio. Se trata de dos países que realizan elecciones a nivel nacional confiando en estas máquinas, pero que al mismo tiempo, no confían en la transmisión de los resultados vía web.
 
 \subsection{Software o hardware malicioso que puede cambiar la intención del voto}
-Detalle del ataque multivoto en CABA\footnote{\url{https://docs.google.com/document/d/1aH6kvoLR8O1qWOpEz89FAB2xFcBNB-QqHgZpXxg0vGE/preview}}.
+Detalle del ataque multivoto en CABA\cite{multivoto}.
 
 El sistema de almacenamiento de votos en boletas electrónicas en CABA consiste en la grabación del voto en un tag RFID, que luego se utiliza para realizar el conteo de votos de forma electrónica. En este caso la vulnerabilidad proviene de un software mal diseñado e implementado que no contiene las debidas consideraciones al momento de leer e interpretar los datos de una boleta.
 
@@ -68,9 +68,9 @@ A continuación se mencionan posibles soluciones a este problema:
 
 El medio por el que se envíe el resultado es crítico para evitar modificaciones inesperadas. Se presentan dos posibles ataques al envío de paquetes: un quiebre al protocolo que permitió leer los paquetes y la alerta frente a posibles ataques de disponibilidad.
 
-Lo siguiente fue extraído de un informe de VITA \footnote{(VIRGINIA INFORMATION TECHNOLOGIES AGENCY)} acerca de un sistema de votación utilizado en Virginia, USA \footnote{\url{http://elections.virginia.gov/WebDocs/VotingEquipReport/WINVote-final.pdf}}.\\
+Lo siguiente fue extraído de un informe de VITA \footnote{Virginia Information Technologies Agency} acerca de un sistema de votación utilizado en Virginia, USA\cite{vita}.\\
 Las terminales de votación utilizadas en este sistema, utilizan la red Wifi para comunicarse. Sin embargo, el protocolo de seguridad de la red utilizado es \texttt{WEP}\footnote{Deprecado por la IEEE en 2004}, además, cada terminal \texttt{broadcastea} su nombre de red (SSID) permitiendo un fácil escaneo de las terminales. Se realizó un ataque aprovechando este débil esquema de seguridad, que se detalla a continuación.\\
-Luego de obtener la lista de nombres de las terminales escaneando las SSID, se procedió a escuchar la red por aproximadamente dos minutos para obtener un \texttt{packet-trace} de la comunicación de red. Utilizando esta información, fue posible explotar una vulnerabilidad del protocolo WEP y crackear la clave, en este caso la clave era \textit{abcde}. Una vez que se accedió a la red de la terminal, se realizaron análisis de vulnerabilidades con las herramientas NMap\footnote{\url{https://nmap.org/book/man-port-scanning-techniques.html}} y Nessus\footnote{\url{http://www.tenable.com/products/nessus-vulnerability-scanner}}, cuyo resultado mostró que había varios puertos abiertos y distintas vulnerabilidades. Como se mencionó en la parte de almacenamiento, la combinación de vulnerabilidades en varios frentes de este sistema permitió un reemplazo total de la base de datos de votación de la terminal.
+Luego de obtener la lista de nombres de las terminales escaneando las SSID, se procedió a escuchar la red por aproximadamente dos minutos para obtener un \texttt{packet-trace} de la comunicación de red. Utilizando esta información, fue posible explotar una vulnerabilidad del protocolo WEP y crackear la clave, en este caso la clave era \textit{abcde}. Una vez que se accedió a la red de la terminal, se realizaron análisis de vulnerabilidades con las herramientas NMap\cite{nmap} y Nessus\cite{nessus}, cuyo resultado mostró que había varios puertos abiertos y distintas vulnerabilidades. Como se mencionó en la parte de almacenamiento, la combinación de vulnerabilidades en varios frentes de este sistema permitió un reemplazo total de la base de datos de votación de la terminal.
 
 
 En el caso del sistema Vot.Ar, la transmisión consiste básicamente en una conexión entre cada terminal de votación y un servidor central que recibe los votos. Si alguien con acceso a la red de alguna máquina de votacion quisiera atacar la disponibilidad del servidor para, por ejemplo, retrasar los resultados, podría obtener la IP o nombre del servidor central y mediante alguna red de botnets obtenida por otro medio, realizar ataques de denegación de servicio y posiblemente explotar vulnerabilidades en el servidor. Por ejemplo podría realizarse un \texttt{SYN-Flood attack}, alterando la disponibilidad del servidor.
@@ -79,10 +79,8 @@ En el caso del sistema Vot.Ar, la transmisión consiste básicamente en una cone
 \subsection{Verificación de autenticidad}
 
 Se toma el caso de Buenos Aires para mostrar uno de los métodos utilizados para garantizar la autenticidad del mensaje enviado (certificados), y sus errores que invalidan el mecanismo de seguridad.
-\footnote{\url{http://ivan.barreraoro.com.ar/vot-ar-una-mala-eleccion/}}
-\footnote{\url{https://blog.smaldone.com.ar/2016/05/03/el-dia-que-el-sistema-de-voto-electronico-vot-ar-fue-vulnerado/}}
 
-Los mecanismos de transmisión y seguridad propuestos para el sistema Vot.Ar son como siguen:
+Los mecanismos de transmisión y seguridad propuestos para el sistema Vot.Ar son como siguen\cite{votar}:
 \begin{itemize}
 	\item La terminal de votación es conectada a internet y un técnico de la empresa encargada inicia un software especial de transmisión en ellas. Esta conexión a internet puede variar, desde una conexión cableada del colegio hasta una conexión 3G/4G.
 	\item Este software de transmisión se conecta a un servidor de MSA y luego de realizar el recuento físico de boletas apoyando el RFID en la máquina, estos datos se envían al servidor.
@@ -92,7 +90,7 @@ La propuesta de la empresa para asegurar la transmisión es la utilización de c
 
 Claramente es vital que la distribución e instalación de estos certificados en las terminales sea un proceso bien diseñado ya que la información que manejan es muy sensible. Cualquiera que tenga acceso de manera malintencionada a esta información podría hacerse pasar por una terminal y subir datos espurios al servidor.
 
-Uno de los factores de riesgo es quién tiene acceso a los equipos, sobre todo cuánta gente. En este caso, los técnicos eran contratados sin ni siquiera una entrevista presencial. Como se ve a continuación, cada uno de estos técnicos tenía acceso a información que podía comprometer la elección.
+Uno de los factores de riesgo es quién tiene acceso a los equipos, sobre todo cuánta gente. En este caso, los técnicos eran contratados sin ni siquiera una entrevista presencial. Como se ve a continuación, cada uno de estos técnicos tenía acceso a información que podía comprometer la elección\cite{smaldone}.
 
 El resultado de estas fallas de seguridad fue que la lista de certificados fue filtrada días antes del comicio de 2015. Y además se filtraron los datos personales de los técnicos, haciendo suponer otras vulnerabilidades.
 

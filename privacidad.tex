@@ -6,10 +6,10 @@ El quiebre de la confidencialidad del voto significa que alguien sepa qué es lo
 
 En todos los sistemas que se analizaron para este trabajo donde se guardan los registros de los votantes, éstos van por separado al voto en sí mismo, para proteger la confidencialidad. Pero si hubiera forma de unir ambas listas, esa seguridad se ve comprometida.
 
-Un ejemplo es Brasil, donde se optó por dejar de utilizar VVPAT debido al incremento del costo por las impresoras y por problemas operacionales. En su lugar, se adoptó un sustituto totalmente digital. Los votos pasaron a almacenarse en una estructura de datos llamada DRV (Digital Record of the Vote) en la memoria electrónica de la maquina de votación. Esta estructura es una tabla separada en secciones, donde cada sección está dedicada a una postulación distinta. Para que no se pueda saber quién voto a quién, esta tabla almacena en distinto orden en que fueron emitidos los votos (La tabla shufflea los votos emitidos)\footnote{\url{https://ivan.barreraoro.com.ar/wp-content/uploads/2015/09/Software-vulnerabilities-in-the-Brazilian-voting-machine.pdf}}.
+Un ejemplo es Brasil, donde se optó por dejar de utilizar VVPAT debido al incremento del costo por las impresoras y por problemas operacionales. En su lugar, se adoptó un sustituto totalmente digital. Los votos pasaron a almacenarse en una estructura de datos llamada DRV (Digital Record of the Vote) en la memoria electrónica de la maquina de votación. Esta estructura es una tabla separada en secciones, donde cada sección está dedicada a una postulación distinta. Para que no se pueda saber quién voto a quién, esta tabla almacena en distinto orden en que fueron emitidos los votos (La tabla shufflea los votos emitidos)\cite{aranha}.
 DRV fue introducido como un reemplazo de VVPAT permitiendo una verificación independiente de los resultados de la elección. Sin embargo, VVPAT es independiente de los votos computados electrónicamente a diferencia de DRV ya que este último es producido por la misma pieza de software que los cuenta. De esta forma, cualquier ataque exitoso al proceso de contar los votos, compromete la integridad de la DRV.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \includegraphics[width=0.5\textwidth]{Imagenes/privacidad1}
 \caption{Ejemplo de votos en DRV}
 \end{figure}
@@ -34,8 +34,8 @@ Dadas estas vulnerabilidades, se puede realizar los dos siguientes tipos de ataq
 	\item Ataque indirecto: Dado los votos fuera de orden, es posible realizar una búsqueda exhaustiva en los posibles valores de semillas, que son 3600, comparando los espacios vacíos.  Con la semilla correcta, se puede realizar el primer ataque
 \end{enumerate}
 
-En las EVM en India\footnote{\url{https://jhalderm.com/pub/papers/evm-ccs10.pdf}}, existe un ataque que afecta a la privacidad del voto llamado Clip-on Memory Manipulator Attack. A diferencia del ataque mencionado en una sección anterior en el que se intercambia una placa, en este se agrega temporalmente nuevo hardware a la máquina que registra los votos, permitiendo dos ataques: robar votos y violar el secreto del voto.
-\begin{figure}[h!]
+En las EVM en India, existe un ataque que afecta a la privacidad del voto llamado Clip-on Memory Manipulator Attack\cite{india}. A diferencia del ataque mencionado en una sección anterior en el que se intercambia una placa, en este se agrega temporalmente nuevo hardware a la máquina que registra los votos, permitiendo dos ataques: robar votos y violar el secreto del voto.
+\begin{figure}[H]
 \includegraphics{Imagenes/privacidad2}
 \caption{Hardware a agregar. Al girar la perilla, se indica que candidato favorecer}
 \end{figure}
@@ -45,23 +45,21 @@ En las EVM en India\footnote{\url{https://jhalderm.com/pub/papers/evm-ccs10.pdf}
 
 Este tipo de ataques consisten en averiguar el voto mientras la persona está sufragando. Este tipo de quiebre de confidencialidad es especialmente problemático porque contradice uno de los principales beneficios del voto electrónico que es que la gente con discapacidades visuales o motrices pueda efectuar su voto sin ayuda de otra persona, y por lo tanto, en secreto.
 
-Una de las formas de violar este principio es a través de la lectura de formas de almacenamiento externo, como la BUE en la ciudad de Buenos Aires donde existen dos posibles ataques que comprometen la privacidad del voto\footnote{\url{http://ivan.barreraoro.com.ar/vot-ar-una-mala-eleccion/}}.
+Una de las formas de violar este principio es a través de la lectura de formas de almacenamiento externo, como la BUE en la ciudad de Buenos Aires donde existen dos posibles ataques que comprometen la privacidad del voto\cite{votar}.
 
-El primero es que se pierde el anonimato del voto, ya que el voto se escribe en el chip RFID de una BUE y se puede leer el contenido de estos chip a cierta distancia sin que el votante se entere. No solo eso, sino que también cada chip RFID tiene un número que lo identifica. Por ende, si sabemos el orden en que los electores votan y se les da una BUE con un orden predeterminado podemos, al finalizar, revisar el número del RFID, saber a qué elector pertenece y su voto\footnote{\url{https://blog.smaldone.com.ar/2016/01/08/sobre-el-chip-rfid-de-la-boleta-unica-electronica/}}.
+El primero es que se pierde el anonimato del voto, ya que el voto se escribe en el chip RFID de una BUE y se puede leer el contenido de estos chip a cierta distancia sin que el votante se entere. No solo eso, sino que también cada chip RFID tiene un número que lo identifica. Por ende, si sabemos el orden en que los electores votan y se les da una BUE con un orden predeterminado podemos, al finalizar, revisar el número del RFID, saber a qué elector pertenece y su voto\cite{smaldone:chip}.
 
 El segundo posible ataque también corresponde a la pérdida del anonimato del voto pero no se utiliza esta vez el chip RFID, sino la memoria EEPROM integrada de 256KB que se encuentran en el microcontrolador ARM. En esta memoria se puede almacenar todo tipo de información, como por ejemplo el voto y una marca de tiempo. Por ende, similar al anterior, con conocer el orden de los electores al votar se puede saber las elecciones de los electores.
 
-Otro ejemplo de lectura posible de los votos en la urna es en el sistema israelí (que es muy parecido al usado en Argentina)\footnote{\url{https://iss.oy.ne.ro/e-Voting-Jamming.pdf}}\footnote{\url{http://www.eng.tau.ac.il/~yash/evoting-relay-rfid2010.pdf}}. Éste se denomina ``relay attack'', donde la comunicación con las dos partes es iniciada por el atacante que luego simplemente transmite mensajes entre las dos partes sin manipularlas ni siquiera necesariamente leerlos, hasta obtener su objetivo.
+Otro ejemplo de lectura posible de los votos en la urna es en el sistema israelí (que es muy parecido al usado en Argentina). Éste se denomina ``relay attack''\cite{oren:2010}\cite{oren:2012}, donde la comunicación con las dos partes es iniciada por el atacante que luego simplemente transmite mensajes entre las dos partes sin manipularlas ni siquiera necesariamente leerlos, hasta obtener su objetivo.
 
-Un ejemplo de un relay attack
-\footnote{\url{https://en.wikipedia.org/wiki/Relay_attack}}
- es que Peggy trabaja en un edificio de alta seguridad que se accede utilizando una tarjeta inteligente en su bolso. Cuando se acerca a la puerta del edificio, el edificio detecta la presencia de una tarjeta inteligente e inicia un intercambio de mensajes para verificar que la tarjeta es de Peggy. El edificio le permite a Peggy entrar. Mallory quiere entrar en el edificio. Mallory se acerca al edificio con un dispositivo que simula una tarjeta inteligente, y el edificio responde iniciando el intercambio de mensajes. Mallory reenvía el mensaje a su cómplice Evelyn que está siguiendo a Peggy mientras hace mandados en otra parte de la ciudad. Evelyn retransmite el mensaje a la tarjeta inteligente de Peggy, escucha la respuesta de la tarjeta inteligente de Peggy, y envía la respuesta a Mallory, que la transmite al edificio. Continuando de esta manera, Mallory y Evelyn transmiten los mensajes entre el edificio y la tarjeta inteligente de Peggy hasta que el edificio esté satisfecho de que se está comunicando con tarjeta inteligente de Peggy. El edificio se abre y entra Mallory.
+Un ejemplo de un relay attack es que Peggy trabaja en un edificio de alta seguridad que se accede utilizando una tarjeta inteligente en su bolso. Cuando se acerca a la puerta del edificio, el edificio detecta la presencia de una tarjeta inteligente e inicia un intercambio de mensajes para verificar que la tarjeta es de Peggy. El edificio le permite a Peggy entrar. Mallory quiere entrar en el edificio. Mallory se acerca al edificio con un dispositivo que simula una tarjeta inteligente, y el edificio responde iniciando el intercambio de mensajes. Mallory reenvía el mensaje a su cómplice Evelyn que está siguiendo a Peggy mientras hace mandados en otra parte de la ciudad. Evelyn retransmite el mensaje a la tarjeta inteligente de Peggy, escucha la respuesta de la tarjeta inteligente de Peggy, y envía la respuesta a Mallory, que la transmite al edificio. Continuando de esta manera, Mallory y Evelyn transmiten los mensajes entre el edificio y la tarjeta inteligente de Peggy hasta que el edificio esté satisfecho de que se está comunicando con tarjeta inteligente de Peggy. El edificio se abre y entra Mallory.\cite{wiki:relay}
 
 Esta implementación israelí sufre los siguientes ataques:
 \begin{itemize}
 	\item Ballot sniffing attack, el cual permite leer todos los votos en la urna en cualquier momento. Al realizar este ataque antes de que un elector vote, y acto seguido de que el elector votó sin que nadie más haya votado aún, se puede saber a quién votó el elector afectando el anonimato del voto.
 Para realizar este ataque, un retransmisor se establece entre los votos dentro de la urna y la terminal de verificación dentro de la cabina de votación que se encarga de retransmitir el contenido de los votos de la urna a la terminal de verificación para saber su contenido. Se activa repetidamente la terminal de verificación, cada vez con una votó diferente y se almacena su respuesta
-\begin{figure}[h!]
+\begin{figure}[H]
 \includegraphics{Imagenes/privacidad3}
 \caption{Ballot sniffing attack}
 \end{figure}
@@ -77,11 +75,7 @@ Para realizar este ataque, un retransmisor se establece entre los votos dentro d
 
 Para los dos primeros ataques, es necesario un retransmisor.
 
-Israel, un país conocido por su desarrollo rápido y continuo de la tecnología, tuvo la oportunidad de poner en práctica el voto electrónico ya en 2008
-
-\footnote{\url{http://e-lected.blogspot.com.ar/2013/03/the-implementation-of-e-voting-in.html?m=1}}.
-
-. Sin embargo, a pesar de la aprobación en general de la clase política, esto no sucedió, y en la actualidad el país no lo usa. ¿Por qué? Israel es un ejemplo de los riesgos que corre un país cuando su proceso de modernización electoral no es transparente y abierto a la gente.
+Israel, un país conocido por su desarrollo rápido y continuo de la tecnología, tuvo la oportunidad de poner en práctica el voto electrónico ya en 2008\cite{e-lected}. Sin embargo, a pesar de la aprobación en general de la clase política, esto no sucedió, y en la actualidad el país no lo usa. ¿Por qué? Israel es un ejemplo de los riesgos que corre un país cuando su proceso de modernización electoral no es transparente y abierto a la gente.
 
 En 2008, el Ministerio del Interior israelí publicó una propuesta de ley para la implementación del voto electrónico en los próximos eventos electorales después de una prueba exitosa en paralelo a las elecciones locales de 2007. Sin embargo, esta propuesta plantea dos problemas: en primer lugar, no hubo una discusión pública sobre el asunto, y todo se hizo a puerta cerrada; segundo, las máquinas de votación del país que querían usar no emiten recibos de voto, lo que hizo que el electorado sospechoso de su auditabilidad.
 
@@ -89,6 +83,6 @@ Se demostró que contenía vulnerabilidades, y la falta de medios para auditabil
 Al final, tras las protestas de los ciudadanos en tensión, la iniciativa de votación electrónica fue cancelada e Israel tuvo que volver a votación manual.
 
 
-Por último, y bastante más complicado, está el ejemplo de la auditoría holandesa(http://wijvertrouwenstemcomputersniet.nl/images/9/91/Es3b-en.pdf), donde se logró identificar el voto mientras sucedía a través de un ``side-effect'' muy interesante: la frecuencia de radio. En este ataque, se logró encontrar una señal a varias frecuencias distintas, representada como un zumbido, y se dilucidó que la frecuencia cambiaba si el texto a mostrar por pantalla tenía caracteres especiales porque el controlador utilizado para mostrarlos necesitaba hacer más trabajo. En particular, en los Países Bajos al momento de la auditoría uno de los partidos más importantes tenía un caracter acentuado y el otro no, con lo que se podía saber de oído (con cierto aparato para escuchar la frecuencia) por las emisiones de la máquina si un votante elije a cierto partido.
+Por último, y bastante más complicado, está el ejemplo de la auditoría holandesa, donde se logró identificar el voto mientras sucedía a través de un ``side-effect'' muy interesante: la frecuencia de radio\cite{holanda}. En este ataque, se logró encontrar una señal a varias frecuencias distintas, representada como un zumbido, y se dilucidó que la frecuencia cambiaba si el texto a mostrar por pantalla tenía caracteres especiales porque el controlador utilizado para mostrarlos necesitaba hacer más trabajo. En particular, en los Países Bajos al momento de la auditoría uno de los partidos más importantes tenía un caracter acentuado y el otro no, con lo que se podía saber de oído (con cierto aparato para escuchar la frecuencia) por las emisiones de la máquina si un votante elije a cierto partido.
 
 Con un poco más de trabajo, analizando las emisiones irradiadas por la pantalla en más detalle, se pudieron identificar todos los candidatos por separado, pero en la auditoría se aclaraba que ese nivel de trabajo no era factible a ser realizado al momento de la elección estando suficientemente cerca de la máquina.
