@@ -1,11 +1,9 @@
 La complejidad que rodea la transmisión de votos para su posterior escrutinio es que la comunicación es sensible a vulnerabilidades y pueden ocurrir ataques. Los resultados de ataques en esta instancia podrían ser modificaciones en los resultados, incluso a gran escala, interrupción del mensaje para impedir el recuento de ciertos votos, o lentificación o denegación de la comunicación.
 
-Frente a la realidad de dos países investigados, India e Israel, que no transmiten los votos en línea, si no que trasladan las máquinas físicamente hasta un cierto lugar, y realizan el recuento de todos los votos desde ahí; se plantea un cierto inicial grado de desconfianza frente al medio. Se trata de dos países que realizan elecciones a nivel nacional confiando en estas máquinas, pero que al mismo tiempo, no confían en la transmisión de los resultados vía web.
+Frente a la realidad de dos países investigados, India e Israel, que no transmiten los votos en línea, si no que trasladan las máquinas físicamente hasta un cierto lugar, y realizan el recuento de todos los votos desde ahí; se plantea un cierto grado inicial de desconfianza frente al medio. Se trata de dos países que realizan elecciones a nivel nacional confiando en estas máquinas, pero que al mismo tiempo, no confían en la transmisión de los resultados vía web.
 
 \subsection{Software o hardware malicioso que puede cambiar la intención del voto}
-Detalle del ataque multivoto en CABA\cite{multivoto}.
-
-El sistema de almacenamiento de votos en boletas electrónicas en CABA consiste en la grabación del voto en un tag RFID, que luego se utiliza para realizar el conteo de votos de forma electrónica. En este caso la vulnerabilidad proviene de un software mal diseñado e implementado que no contiene las debidas consideraciones al momento de leer e interpretar los datos de una boleta.
+Como ya se habló, el sistema de almacenamiento de votos en boletas electrónicas en CABA consiste en la grabación del voto en un tag RFID, que luego se utiliza para realizar el conteo de votos de forma electrónica. En este caso la vulnerabilidad proviene de un software mal diseñado e implementado que no contiene las debidas consideraciones al momento de leer e interpretar los datos de una boleta.
 
 Más particularmente, puede observarse en una porción del código del sistema de voto electrónico lo siguiente:
 
@@ -28,7 +26,7 @@ class Selection(object):
 
 \end{lstlisting}
 
-Más allá de una falla de verificación en la función \texttt{parse} mencionada en la bibliografía, lo más grave es que nunca se chequea ninguna de las siguientes cosas:
+Más allá de una falla de verificación en la función \texttt{parse} mencionada en la bibliografía, lo más grave es que nunca se chequea ninguna de las siguientes cosas\cite{multivoto}:
 \begin{itemize}
 	\item Unicidad de voto por boleta
 	\item Cantidad de votos por candidato sea a lo sumo 1
@@ -56,7 +54,6 @@ Aquí puede verse una validación sobre la identificación única de cada boleta
 Esta vulnerabilidad, permitía al atacante escribirle a una boleta electrónica mediante un smartphone varios votos a un mismo candidato, y esto pasaría desapercibido por ambos módulos del sistema mostrados arriba, constituyendo una fuerte vulnerabilidad.
 
 A continuación se mencionan posibles soluciones a este problema:
-
 \begin{itemize}
 	\item Verificar que la escritura de los votos hayan provenido de una máquina real de vot.ar, por ejemplo usando claves privadas
 	\item Verificar al momento de la lectura y recuento de la boleta las cuestiones mencionadas
@@ -68,13 +65,13 @@ A continuación se mencionan posibles soluciones a este problema:
 
 El medio por el que se envíe el resultado es crítico para evitar modificaciones inesperadas. Se presentan dos posibles ataques al envío de paquetes: un quiebre al protocolo que permitió leer los paquetes y la alerta frente a posibles ataques de disponibilidad.
 
-Lo siguiente fue extraído de un informe de VITA \footnote{Virginia Information Technologies Agency} acerca de un sistema de votación utilizado en Virginia, USA\cite{vita}.\\
-Las terminales de votación utilizadas en este sistema, utilizan la red Wifi para comunicarse. Sin embargo, el protocolo de seguridad de la red utilizado es \texttt{WEP}\footnote{Deprecado por la IEEE en 2004}, además, cada terminal \texttt{broadcastea} su nombre de red (SSID) permitiendo un fácil escaneo de las terminales. Se realizó un ataque aprovechando este débil esquema de seguridad, que se detalla a continuación.\\
-Luego de obtener la lista de nombres de las terminales escaneando las SSID, se procedió a escuchar la red por aproximadamente dos minutos para obtener un \texttt{packet-trace} de la comunicación de red. Utilizando esta información, fue posible explotar una vulnerabilidad del protocolo WEP y crackear la clave, en este caso la clave era \textit{abcde}. Una vez que se accedió a la red de la terminal, se realizaron análisis de vulnerabilidades con las herramientas NMap\cite{nmap} y Nessus\cite{nessus}, cuyo resultado mostró que había varios puertos abiertos y distintas vulnerabilidades. Como se mencionó en la parte de almacenamiento, la combinación de vulnerabilidades en varios frentes de este sistema permitió un reemplazo total de la base de datos de votación de la terminal.
+Lo siguiente fue extraído de un informe de VITA acerca de un sistema de votación utilizado en Virginia, USA\cite{vita}.
+Las terminales de votación utilizadas en este sistema, utilizan la red Wifi para comunicarse. Sin embargo, el protocolo de seguridad de la red utilizado es WEP\footnote{Deprecado por la IEEE en 2004}, además, cada terminal \textit{broadcastea} su nombre de red (SSID) permitiendo un fácil escaneo de las terminales. Se realizó un ataque aprovechando este débil esquema de seguridad, que se detalla a continuación.
+
+Luego de obtener la lista de nombres de las terminales escaneando las SSID, se procedió a escuchar la red por aproximadamente dos minutos para obtener un \textit{packet-trace} de la comunicación de red. Utilizando esta información, fue posible explotar una vulnerabilidad del protocolo WEP y crackear la clave, en este caso la clave era \textit{abcde}. Una vez que se accedió a la red de la terminal, se realizaron análisis de vulnerabilidades con las herramientas NMap\cite{nmap} y Nessus\cite{nessus}, cuyo resultado mostró que había varios puertos abiertos y distintas vulnerabilidades. Como se mencionó en la parte de almacenamiento, la combinación de vulnerabilidades en varios frentes de este sistema permitió un reemplazo total de la base de datos de votación de la terminal.
 
 
-En el caso del sistema Vot.Ar, la transmisión consiste básicamente en una conexión entre cada terminal de votación y un servidor central que recibe los votos. Si alguien con acceso a la red de alguna máquina de votacion quisiera atacar la disponibilidad del servidor para, por ejemplo, retrasar los resultados, podría obtener la IP o nombre del servidor central y mediante alguna red de botnets obtenida por otro medio, realizar ataques de denegación de servicio y posiblemente explotar vulnerabilidades en el servidor. Por ejemplo podría realizarse un \texttt{SYN-Flood attack}, alterando la disponibilidad del servidor.
-
+En el caso del sistema Vot.Ar, la transmisión consiste básicamente en una conexión entre cada terminal de votación y un servidor central que recibe los votos. Si alguien con acceso a la red de alguna máquina de votacion quisiera atacar la disponibilidad del servidor para, por ejemplo, retrasar los resultados, podría obtener la IP o nombre del servidor central y mediante alguna red de botnets obtenida por otro medio, realizar ataques de denegación de servicio y posiblemente explotar vulnerabilidades en el servidor. Por ejemplo podría realizarse un \textit{SYN-Flood attack}, alterando la disponibilidad del servidor.
 
 \subsection{Verificación de autenticidad}
 
